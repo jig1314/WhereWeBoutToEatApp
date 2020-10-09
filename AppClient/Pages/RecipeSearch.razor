@@ -1,0 +1,29 @@
+﻿@page "/recipeSearch"
+@inherits RecipeSearchBase
+
+<h3>Search for Recipes</h3>
+
+<input type="search" class="form-control" @onchange="OnSearchTextChanged" placeholder="Search..." />
+
+@if (!string.IsNullOrWhiteSpace(SearchText))
+{
+    if (Recipes != null)
+    {
+        <div class="card-deck">
+            @foreach (var recipe in Recipes)
+            {
+                <div class="card" style="min-width: 18rem; max-width: 30.5%;">
+                    <img class="card-img-top recipeThumbnail" src="@recipe.ThumbnailURL" />
+                    <div class="card-body">
+                        <h5 class="card-title">@recipe.Name</h5>
+                        <a href="#" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="loading-bar"></div>
+    }
+}
