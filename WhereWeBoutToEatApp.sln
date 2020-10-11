@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppClient", "AppClient\AppC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppModels", "AppModels\AppModels.csproj", "{DD082D0E-46D3-4420-9387-7111AC0341E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppServer", "AppServer\AppServer.csproj", "{EBCDF8F3-C153-4817-A4F2-3E87EFE8E818}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppServer", "AppServer\AppServer.csproj", "{EBCDF8F3-C153-4817-A4F2-3E87EFE8E818}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

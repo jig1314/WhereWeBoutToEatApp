@@ -9,5 +9,6 @@ namespace AppClient.Services
     public interface IRecipeService
     {
         public Task<IEnumerable<Recipe>> SearchRecipes(string name);
+        public Task<Recipe> GetRecipe(int id);
     }
 }

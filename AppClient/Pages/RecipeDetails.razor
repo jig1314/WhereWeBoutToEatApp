@@ -1,0 +1,23 @@
+﻿@page "/recipeDetails/{id}"
+@inherits RecipeDetailsBase
+
+<h3>Recipe Details</h3>
+
+<hr />
+
+@if (Recipe != null)
+{
+    <div class="card-deck">
+        <div class="card" style="min-width: 18rem; max-width: 30.5%; margin-top: 15px; margin-bottom: 15px;">
+            <img class="card-img-top recipeThumbnail" src="@Recipe.ThumbnailURL" />
+            <div class="card-body">
+                <h5 class="card-title">@Recipe.Name</h5>
+                <a href="/" class="btn btn-primary">Back</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="loading-bar"></div>
+}

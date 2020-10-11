@@ -8,6 +8,6 @@ namespace AppServer.Repositories
 {
     public interface ITastyRecipeRepository
     {
-        Task<IEnumerable<Recipe>> SearchRecipes(string name);
+        Task<List<Recipe>> SearchRecipes(string name);
     }
 }

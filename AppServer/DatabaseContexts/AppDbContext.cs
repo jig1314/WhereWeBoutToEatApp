@@ -18,6 +18,8 @@ namespace AppServer.DatabaseContexts
 
         public DbSet<Recipe> Recipes { get; set; }
 
+        public DbSet<RecipeType> RecipeTypes { get; set; }
+
         public DbSet<AppSetting> AppSettings { get; set; }
 
     }

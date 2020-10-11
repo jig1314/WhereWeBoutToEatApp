@@ -1,6 +1,7 @@
 ﻿using AppClient.Services;
 using AppModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,22 +16,36 @@ namespace AppClient.Pages
         [Inject]
         public IRecipeService RecipeService { get; set; }
 
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
         public IEnumerable<Recipe> Recipes { get; set; }
 
+        [Parameter]
         public string SearchText { get; set; }
 
-        protected async Task OnSearchTextChanged(ChangeEventArgs eventArgs)
+        public string LocalSearchText { get; set; }
+
+        protected override async Task OnInitializedAsync()
         {
-            if (eventArgs.Value != null) 
+            LocalSearchText = SearchText;
+            if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                SearchText = eventArgs.Value.ToString();
-                Recipes = null;
-                if (!string.IsNullOrWhiteSpace(eventArgs.Value.ToString()))
-                {
-                    Recipes = await RecipeService.SearchRecipes(SearchText);
-                }
+                await SearchForRecipes();
             }
         }
 
+        protected void OnSearchTextChanged(ChangeEventArgs eventArgs)
+        {
+            if (eventArgs.Value != null && eventArgs.Value.ToString() != SearchText)
+            {
+                NavigationManager.NavigateTo($"/recipeSearch/{LocalSearchText}", true);
+            }
+        }
+
+        private async Task SearchForRecipes()
+        {
+            Recipes = await RecipeService.SearchRecipes(SearchText);
+        }
     }
 }

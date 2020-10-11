@@ -23,13 +23,15 @@ namespace AppServer.Repositories
             this.appDbContext = context;
         }
 
-        public async Task<IEnumerable<Recipe>> SearchRecipes(string name)
+        public async Task<List<Recipe>> SearchRecipes(string name)
         {
             var tastyApiUrl = (await appDbContext.AppSettings.FirstOrDefaultAsync(setting => setting.EnumCode == (int)AppSetting.TastyApiUrl)).Value;
             var tastyApiHostName = (await appDbContext.AppSettings.FirstOrDefaultAsync(setting => setting.EnumCode == (int)AppSetting.TastyApiHostName)).Value;
             var tastyApiHostValue = (await appDbContext.AppSettings.FirstOrDefaultAsync(setting => setting.EnumCode == (int)AppSetting.TastyApiHostValue)).Value;
             var tastyApiKeyName = (await appDbContext.AppSettings.FirstOrDefaultAsync(setting => setting.EnumCode == (int)AppSetting.TastyApiKeyName)).Value;
             var tastyApiKeyValue = (await appDbContext.AppSettings.FirstOrDefaultAsync(setting => setting.EnumCode == (int)AppSetting.TastyApiKeyValue)).Value;
+
+            var tastyRecipeType = await appDbContext.RecipeTypes.FirstOrDefaultAsync(type => type.EnumCode == (int)AppModels.Enums.RecipeType.Tasty);
 
             var client = new RestClient($"{tastyApiUrl}{name}&from=0&sizes=20");
             var request = new RestRequest(Method.GET);
@@ -43,7 +45,8 @@ namespace AppServer.Repositories
                 .Select(recipe => new Recipe
                 {
                     Name = (string)recipe["name"],
-                    ThumbnailURL = (string)recipe["thumbnail_url"]
+                    ThumbnailURL = (string)recipe["thumbnail_url"],
+                    IdRecipeType = tastyRecipeType.ID
                 })
                 .ToList();
 
