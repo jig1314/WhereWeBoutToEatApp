@@ -1,21 +1,28 @@
 ﻿@page "/recipeDetails/{id}"
 @inherits RecipeDetailsBase
 
-<h3>Recipe Details</h3>
-
-<hr />
-
 @if (Recipe != null)
 {
-    <div class="card-deck">
-        <div class="card" style="min-width: 18rem; max-width: 30.5%; margin-top: 15px; margin-bottom: 15px;">
-            <img class="card-img-top recipeThumbnail" src="@Recipe.ThumbnailURL" />
-            <div class="card-body">
-                <h5 class="card-title">@Recipe.Name</h5>
-                <a href="/" class="btn btn-primary">Back</a>
-            </div>
-        </div>
+<div class="card border-light mb-3" style="width: 721px;">
+    <div class="card-body">
+        <h5 style="font:bold" class="card-title">@Recipe.Name</h5>
     </div>
+    @if (string.IsNullOrWhiteSpace(Recipe.VideoURL))
+    {
+        <img class="card-img" src="@Recipe.ThumbnailURL">
+    }
+    else
+    {
+        <video width="720" height="480" controls>
+            <source src="@Recipe.VideoURL" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    }
+    <div class="card-body">
+        <a href="@Recipe.URL" class="card-link">Go to site</a>
+        <a class="card-link">Favorite</a>
+    </div>
+</div>
 }
 else
 {

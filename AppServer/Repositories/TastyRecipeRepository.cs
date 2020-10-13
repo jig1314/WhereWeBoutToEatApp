@@ -41,14 +41,33 @@ namespace AppServer.Repositories
 
             var content = JsonConvert.DeserializeObject<JToken>(response.Content);
 
-            var recipes = content.SelectTokens("results[*]")
-                .Select(recipe => new Recipe
-                {
+            var results = content.SelectTokens("results[*]");
+            var recipes = results.Select(recipe => new Recipe
+            {
+                    ApiId = (int)recipe["id"],
                     Name = (string)recipe["name"],
                     ThumbnailURL = (string)recipe["thumbnail_url"],
+                    VideoURL = (string)recipe["original_video_url"],
+                    UrlSuffix = (string)recipe["slug"],
                     IdRecipeType = tastyRecipeType.ID
-                })
-                .ToList();
+            }).ToList();
+
+            foreach (var result in results)
+            {
+                var childRecipes = result.SelectTokens("recipes[*]").Select(recipe => new Recipe
+                {
+                    ApiId = (int)recipe["id"],
+                    Name = (string)recipe["name"],
+                    ThumbnailURL = (string)recipe["thumbnail_url"],
+                    VideoURL = (string)recipe["original_video_url"],
+                    UrlSuffix = (string)recipe["slug"],
+                    IdRecipeType = tastyRecipeType.ID
+                }).ToList();
+
+                recipes.AddRange(childRecipes);
+            }
+
+            recipes = recipes.Distinct(new RecipeComparer()).ToList();
 
             return recipes;
         }

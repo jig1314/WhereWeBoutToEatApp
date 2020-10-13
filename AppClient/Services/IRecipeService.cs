@@ -1,4 +1,5 @@
-﻿using AppModels;
+﻿using AppClient.Models;
+using AppModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace AppClient.Services
     public interface IRecipeService
     {
         public Task<IEnumerable<Recipe>> SearchRecipes(string name);
-        public Task<Recipe> GetRecipe(int id);
+        public Task<RecipeViewModel> GetRecipe(int id);
     }
 }

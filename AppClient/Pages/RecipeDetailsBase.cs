@@ -1,4 +1,5 @@
-﻿using AppClient.Services;
+﻿using AppClient.Models;
+using AppClient.Services;
 using AppModels;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -16,7 +17,7 @@ namespace AppClient.Pages
         [Parameter]
         public string Id { get; set; }
 
-        public Recipe Recipe { get; set; }
+        public RecipeViewModel Recipe { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

@@ -35,7 +35,7 @@ namespace AppServer.Controllers
                     return NotFound();
                 }
 
-                var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.ID == id);
+                var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Id == id);
 
                 if (recipe == null)
                 {

@@ -14,5 +14,7 @@ namespace AppModels
 
         public string Description { get; set; }
 
+        public string BaseURL { get; set; }
+
     }
 }
