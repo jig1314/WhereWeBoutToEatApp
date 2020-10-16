@@ -20,7 +20,7 @@
     }
     <div class="card-body">
         <a href="@Recipe.URL" class="card-link">Go to site</a>
-        <a class="card-link">Favorite</a>
+        <button type="button" class="btn btn-link" @onclick="@(async () => await FavoriteButtonClicked())">@FavoriteState</button>
     </div>
 </div>
 }
@@ -28,3 +28,4 @@ else
 {
     <div class="loading-bar"></div>
 }
+

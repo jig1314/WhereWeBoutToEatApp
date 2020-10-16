@@ -24,6 +24,8 @@ namespace WhereWeBoutToEatApp.Client.Models
 
         public RecipeType RecipeType { get; set; }
 
+        public AspNetUserRecipe UserRecipe { get; set; }
+
         public string URL => $"{RecipeType.BaseURL}{UrlSuffix}";
     }
 }

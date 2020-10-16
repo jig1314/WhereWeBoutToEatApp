@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using WhereWeBoutToEatApp.Client.Models;
 using WhereWeBoutToEatApp.Shared;
@@ -23,6 +25,7 @@ namespace WhereWeBoutToEatApp.Client.Services
         {
             var recipe = await httpClient.GetFromJsonAsync<Recipe>($"recipes/{id}");
             var recipeType = await httpClient.GetFromJsonAsync<RecipeType>($"recipeTypes/{recipe.IdRecipeType}");
+            var userRecipe = await httpClient.GetFromJsonAsync<AspNetUserRecipe>($"userrecipes/{id}");
 
             return new RecipeViewModel()
             {
@@ -33,11 +36,18 @@ namespace WhereWeBoutToEatApp.Client.Services
                 ThumbnailURL = recipe.ThumbnailURL,
                 UrlSuffix = recipe.UrlSuffix,
                 VideoURL = recipe.VideoURL,
-                RecipeType = recipeType
+                RecipeType = recipeType,
+                UserRecipe = userRecipe
             };
         }
 
         public async Task<IEnumerable<Recipe>> SearchRecipes(string name) =>
             await httpClient.GetFromJsonAsync<IEnumerable<Recipe>>($"recipes/search/{name}");
+
+        public async Task UpdateUserRecipe(long idUserRecipe, AspNetUserRecipe newUserRecipe)
+        {
+            var response = await httpClient.PutAsJsonAsync($"userrecipes/{idUserRecipe}", newUserRecipe);
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

@@ -14,6 +14,8 @@ using System.Linq;
 using WhereWeBoutToEatApp.Server.Data;
 using WhereWeBoutToEatApp.Server.Models;
 using WhereWeBoutToEatApp.Server.Repositories;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WhereWeBoutToEatApp.Server
 {
@@ -44,10 +46,14 @@ namespace WhereWeBoutToEatApp.Server
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+            services.AddAuthentication().
+                AddIdentityServerJwt();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(opt =>
+            {
+                opt.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
+            });
+
             services.AddRazorPages();
         }
 

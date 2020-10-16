@@ -11,5 +11,6 @@ namespace WhereWeBoutToEatApp.Client.Services
     {
         public Task<IEnumerable<Recipe>> SearchRecipes(string name);
         public Task<RecipeViewModel> GetRecipe(int id);
+        Task UpdateUserRecipe(long id, AspNetUserRecipe newUserRecipe);
     }
 }

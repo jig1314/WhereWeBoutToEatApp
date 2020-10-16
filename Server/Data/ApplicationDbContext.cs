@@ -24,5 +24,11 @@ namespace WhereWeBoutToEatApp.Server.Data
         public DbSet<RecipeType> RecipeTypes { get; set; }
 
         public DbSet<AppSetting> AppSettings { get; set; }
+
+        public DbSet<AspNetUserSearch> AspNetUserSearches { get; set; }
+
+        public DbSet<SearchType> SearchTypes { get; set; }
+
+        public DbSet<AspNetUserRecipe> AspNetUserRecipes { get; set; }
     }
 }

@@ -9,6 +9,10 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using WhereWeBoutToEatApp.Server.Data;
 using WhereWeBoutToEatApp.Shared;
 using WhereWeBoutToEatApp.Server.Repositories;
+using Microsoft.AspNetCore.Components.Authorization;
+using IdentityServer4.Extensions;
+using Microsoft.AspNetCore.Identity;
+using WhereWeBoutToEatApp.Server.Models;
 
 namespace WhereWeBoutToEatApp.Server.Controllers
 {
@@ -17,11 +21,13 @@ namespace WhereWeBoutToEatApp.Server.Controllers
     public class RecipesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITastyRecipeRepository tastyRecipeRepository;
 
-        public RecipesController(ApplicationDbContext context, ITastyRecipeRepository tastyRecipeRepository)
+        public RecipesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITastyRecipeRepository tastyRecipeRepository)
         {
             _context = context;
+            _userManager = userManager;
             this.tastyRecipeRepository = tastyRecipeRepository;
         }
 
@@ -34,7 +40,7 @@ namespace WhereWeBoutToEatApp.Server.Controllers
                 {
                     return NotFound();
                 }
-
+                
                 var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Id == id);
 
                 if (recipe == null)
