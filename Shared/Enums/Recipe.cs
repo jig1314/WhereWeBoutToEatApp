@@ -4,8 +4,11 @@ using System.Text;
 
 namespace WhereWeBoutToEatApp.Shared.Enums
 {
-    public enum RecipeType
+    public class Recipe
     {
-        Tasty = 1
+        public enum RecipeType
+        {
+            Tasty = 1
+        }
     }
 }

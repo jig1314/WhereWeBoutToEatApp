@@ -31,7 +31,7 @@ namespace WhereWeBoutToEatApp.Server.Repositories
             var tastyApiKeyName = (await appDbContext.AppSettings.FirstOrDefaultAsync(setting => setting.EnumCode == (int)AppSetting.TastyApiKeyName)).Value;
             var tastyApiKeyValue = (await appDbContext.AppSettings.FirstOrDefaultAsync(setting => setting.EnumCode == (int)AppSetting.TastyApiKeyValue)).Value;
 
-            var tastyRecipeType = await appDbContext.RecipeTypes.FirstOrDefaultAsync(type => type.EnumCode == (int)Shared.Enums.RecipeType.Tasty);
+            var tastyRecipeType = await appDbContext.RecipeTypes.FirstOrDefaultAsync(type => type.EnumCode == (int)Shared.Enums.Recipe.RecipeType.Tasty);
 
             var client = new RestClient($"{tastyApiUrl}{name}&from=0&sizes=20");
             var request = new RestRequest(Method.GET);

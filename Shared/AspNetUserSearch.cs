@@ -15,5 +15,6 @@ namespace WhereWeBoutToEatApp.Shared
         public string Search { get; set; }
 
         public int IdSearchType { get; set; }
+        public int TimesSearched { get; set; }
     }
 }

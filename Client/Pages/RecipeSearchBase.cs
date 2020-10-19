@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +15,9 @@ namespace WhereWeBoutToEatApp.Client.Pages
 {
     public class RecipeSearchBase : ComponentBase
     {
+        [CascadingParameter]
+        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
         [Inject]
         public IRecipeService RecipeService { get; set; }
 
@@ -23,11 +28,15 @@ namespace WhereWeBoutToEatApp.Client.Pages
 
         [Parameter]
         public string SearchText { get; set; }
+        
+        public AuthenticationState AuthenticationState { get; set; }
 
         public string LocalSearchText { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
+            AuthenticationState = await AuthenticationStateTask;
+
             LocalSearchText = SearchText;
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
@@ -45,7 +54,14 @@ namespace WhereWeBoutToEatApp.Client.Pages
 
         private async Task SearchForRecipes()
         {
-            Recipes = await RecipeService.SearchRecipes(SearchText);
+            if (!AuthenticationState.User.Identity.IsAuthenticated)
+            {
+                NavigationManager.NavigateTo($"/authentication/login?returnUrl={WebUtility.UrlEncode(NavigationManager.Uri)}");
+            }
+            else
+            {
+                Recipes = await RecipeService.SearchRecipes(SearchText);
+            }
         }
     }
 }

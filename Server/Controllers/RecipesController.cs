@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Identity;
 using WhereWeBoutToEatApp.Server.Models;
+using System.Security.Claims;
 
 namespace WhereWeBoutToEatApp.Server.Controllers
 {
@@ -21,13 +22,11 @@ namespace WhereWeBoutToEatApp.Server.Controllers
     public class RecipesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITastyRecipeRepository tastyRecipeRepository;
 
-        public RecipesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITastyRecipeRepository tastyRecipeRepository)
+        public RecipesController(ApplicationDbContext context, ITastyRecipeRepository tastyRecipeRepository)
         {
             _context = context;
-            _userManager = userManager;
             this.tastyRecipeRepository = tastyRecipeRepository;
         }
 
@@ -66,6 +65,11 @@ namespace WhereWeBoutToEatApp.Server.Controllers
                     return BadRequest();
                 }
 
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
+                    await AddUserSearch(name);
+                }
+
                 var databaseResults = await SearchDatabaseAsync(name);
                 if (databaseResults?.Count > 0)
                 {
@@ -100,5 +104,37 @@ namespace WhereWeBoutToEatApp.Server.Controllers
             await _context.Recipes.AddRangeAsync(recipes);
             await _context.SaveChangesAsync();
         }
+
+        private async Task AddUserSearch(string name)
+        {
+            var idUser = GetUserId();
+            var recipeSearchType = await _context.SearchTypes.FirstOrDefaultAsync(type => type.EnumCode == (int)Shared.Enums.Search.SearchType.Recipe);
+            var userSearch = await _context.AspNetUserSearches.FirstOrDefaultAsync(search => search.IdSearchType == recipeSearchType.Id && search.IdUser == idUser && search.Search == name);
+
+            if (userSearch == null)
+            {
+                userSearch = new AspNetUserSearch()
+                {
+                    IdUser = idUser,
+                    Search = name,
+                    IdSearchType = recipeSearchType.Id,
+                    TimesSearched = 1
+                };
+                await _context.AspNetUserSearches.AddAsync(userSearch);
+            }
+            else
+            {
+                userSearch.TimesSearched++;
+                _context.Entry(userSearch).State = EntityState.Modified;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        private string GetUserId()
+        {
+            return HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
+
     }
 }
