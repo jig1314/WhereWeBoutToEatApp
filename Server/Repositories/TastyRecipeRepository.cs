@@ -33,7 +33,7 @@ namespace WhereWeBoutToEatApp.Server.Repositories
 
             var tastyRecipeType = await appDbContext.RecipeTypes.FirstOrDefaultAsync(type => type.EnumCode == (int)Shared.Enums.Recipe.RecipeType.Tasty);
 
-            var client = new RestClient($"{tastyApiUrl}{name}&from=0&sizes=20");
+            var client = new RestClient($"{tastyApiUrl}{name}&from=0&sizes=50");
             var request = new RestRequest(Method.GET);
             request.AddHeader(tastyApiHostName, tastyApiHostValue);
             request.AddHeader(tastyApiKeyName, tastyApiKeyValue);

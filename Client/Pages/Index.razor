@@ -1,5 +1,11 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<AuthorizeView>
+    <Authorized>
+        <h1>Welcome back!</h1>
+    </Authorized>
+    <NotAuthorized>
+        <h1>Welcome!</h1>
+        Please register or log in.
+    </NotAuthorized>
+</AuthorizeView>

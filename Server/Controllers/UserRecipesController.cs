@@ -25,13 +25,6 @@ namespace WhereWeBoutToEatApp.Server.Controllers
             _context = context;
         }
 
-        // GET: api/UserRecipes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AspNetUserRecipe>>> GetAspNetUserRecipes()
-        {
-            return await _context.AspNetUserRecipes.ToListAsync();
-        }
-
         // GET: api/UserRecipes/5
         [HttpGet("{idRecipe}")]
         public async Task<ActionResult<AspNetUserRecipe>> GetAspNetUserRecipe(long idRecipe)
@@ -97,34 +90,6 @@ namespace WhereWeBoutToEatApp.Server.Controllers
             }
 
             return NoContent();
-        }
-
-        // POST: api/UserRecipes
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<AspNetUserRecipe>> PostAspNetUserRecipe(AspNetUserRecipe aspNetUserRecipe)
-        {
-            _context.AspNetUserRecipes.Add(aspNetUserRecipe);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAspNetUserRecipe", new { id = aspNetUserRecipe.Id }, aspNetUserRecipe);
-        }
-
-        // DELETE: api/UserRecipes/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<AspNetUserRecipe>> DeleteAspNetUserRecipe(long id)
-        {
-            var aspNetUserRecipe = await _context.AspNetUserRecipes.FindAsync(id);
-            if (aspNetUserRecipe == null)
-            {
-                return NotFound();
-            }
-
-            _context.AspNetUserRecipes.Remove(aspNetUserRecipe);
-            await _context.SaveChangesAsync();
-
-            return aspNetUserRecipe;
         }
 
         private bool AspNetUserRecipeExists(long id)
