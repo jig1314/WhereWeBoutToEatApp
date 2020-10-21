@@ -30,5 +30,12 @@ namespace WhereWeBoutToEatApp.Server.Data
         public DbSet<SearchType> SearchTypes { get; set; }
 
         public DbSet<AspNetUserRecipe> AspNetUserRecipes { get; set; }
+
+        public DbSet<RecipeTag> RecipeTags { get; set; }
+
+        public DbSet<RecipeTagType> RecipeTagTypes { get; set; }
+
+        public DbSet<Recipe_RecipeTag> Recipe_RecipeTags { get; set; }
+
     }
 }

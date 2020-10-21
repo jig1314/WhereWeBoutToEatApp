@@ -19,18 +19,4 @@ namespace WhereWeBoutToEatApp.Shared
 
         public int IdRecipeType { get; set; }
     }
-
-    public class RecipeComparer : EqualityComparer<Recipe>
-    {
-        public override bool Equals(Recipe x, Recipe y)
-        {
-            return x.ApiId == y.ApiId && x.IdRecipeType == y.IdRecipeType;
-        }
-
-        public override int GetHashCode(Recipe recipe)
-        {
-            int hash = recipe.ApiId.HasValue ? recipe.ApiId.Value ^ recipe.IdRecipeType : new Random().Next() ^ recipe.IdRecipeType;
-            return hash.GetHashCode();
-        }
-    }
 }

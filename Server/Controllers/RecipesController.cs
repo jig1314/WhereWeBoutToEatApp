@@ -76,8 +76,7 @@ namespace WhereWeBoutToEatApp.Server.Controllers
                     return Ok(databaseResults);
                 }
 
-                var tastyRecipes = await SearchTastyDatabaseAsync(name);
-                await CommitRecipesToDatabase(tastyRecipes);
+                await ImportRecipesFromTastyAsync(name);
 
                 databaseResults = await SearchDatabaseAsync(name);
 
@@ -94,14 +93,50 @@ namespace WhereWeBoutToEatApp.Server.Controllers
             return await _context.Recipes.Where(recipe => recipe.Name.Contains(name)).ToListAsync();
         }
 
-        private async Task<List<Recipe>> SearchTastyDatabaseAsync(string name)
+        private async Task ImportRecipesFromTastyAsync(string name)
         {
-            return await tastyRecipeRepository.SearchRecipes(name);
-        }
+            var tastyRecipes = await tastyRecipeRepository.SearchRecipes(name);
 
-        private async Task CommitRecipesToDatabase(IEnumerable<Recipe> recipes)
-        {
+            var recipes = tastyRecipes.Select(tastyRecipe => tastyRecipe.Recipe);
+
             await _context.Recipes.AddRangeAsync(recipes);
+            await _context.SaveChangesAsync();
+
+            var commitedRecipes = await _context.Recipes.ToListAsync();
+            var commitedRecipesWithTags = commitedRecipes.Join(tastyRecipes, 
+                                                        recipe => new { recipe.ApiId, recipe.IdRecipeType }, 
+                                                        tastyRecipe => new { tastyRecipe.Recipe.ApiId, tastyRecipe.Recipe.IdRecipeType }, 
+                                                        (r, t) => new { Recipe = r, Tags = t.TastyRecipeTags }).ToList();
+
+            var recipeTags = await _context.RecipeTags.ToListAsync();
+            var recipeTagTypes = await _context.RecipeTagTypes.ToListAsync();
+
+            var recipeTagsWithType = recipeTags.Join(recipeTagTypes, tag => tag.IdRecipeTagType, type => type.Id, (tag, type) => new { Tag = tag, Type = type });
+            var distinctTastyRecipeTags = commitedRecipesWithTags.SelectMany(recipe => recipe.Tags).Distinct(new TastyRecipeTagComparer());
+
+            var tastyRecipeTagToRecipeTagsDictionary =
+                    (from tastyRecipeTag in distinctTastyRecipeTags
+                     join recipeTag in recipeTagsWithType
+                     on new { Name = tastyRecipeTag.Name.ToUpper(), DisplayName = tastyRecipeTag.DisplayName.ToUpper(), Type = tastyRecipeTag.RecipeTagType.ToUpper() }
+                     equals new { Name = recipeTag.Tag.Name.ToUpper(), DisplayName = recipeTag.Tag.DisplayName.ToUpper(), Type = recipeTag.Type.Type.ToUpper() }
+                     select new
+                     {
+                         TastyRecipeTag = tastyRecipeTag,
+                         RecipeTag = recipeTag
+                     }).ToDictionary(mapping => mapping.TastyRecipeTag, mapping => mapping.RecipeTag.Tag, new TastyRecipeTagComparer());
+
+
+            foreach (var recipe in commitedRecipesWithTags)
+            {
+                var recipe_RecipeTags = recipe.Tags.Where(tag => tastyRecipeTagToRecipeTagsDictionary.ContainsKey(tag)).Select(tag => tastyRecipeTagToRecipeTagsDictionary[tag]).Select(tag => new Recipe_RecipeTag()
+                {
+                    IdRecipe = recipe.Recipe.Id,
+                    IdRecipeTag = tag.Id
+                });
+
+                await _context.Recipe_RecipeTags.AddRangeAsync(recipe_RecipeTags);
+            }
+            
             await _context.SaveChangesAsync();
         }
 
