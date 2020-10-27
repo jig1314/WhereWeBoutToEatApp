@@ -37,5 +37,10 @@ namespace WhereWeBoutToEatApp.Server.Data
 
         public DbSet<Recipe_RecipeTag> Recipe_RecipeTags { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Recipe>().HasIndex(r => new { r.ApiId, r.IdRecipeType }).IsUnique();
+        }
     }
 }

@@ -71,7 +71,7 @@ namespace WhereWeBoutToEatApp.Server.Controllers
                 }
 
                 var databaseResults = await SearchDatabaseAsync(name);
-                if (databaseResults?.Count > 0)
+                if (databaseResults?.Count > 50)
                 {
                     return Ok(databaseResults);
                 }
@@ -96,13 +96,21 @@ namespace WhereWeBoutToEatApp.Server.Controllers
         private async Task ImportRecipesFromTastyAsync(string name)
         {
             var tastyRecipes = await tastyRecipeRepository.SearchRecipes(name);
+            var commitedRecipes = await _context.Recipes.ToListAsync();
 
-            var recipes = tastyRecipes.Select(tastyRecipe => tastyRecipe.Recipe);
+            tastyRecipes = (from tastyRecipe in tastyRecipes
+                            join recipe in commitedRecipes on new { tastyRecipe.Recipe.ApiId, tastyRecipe.Recipe.IdRecipeType } equals new { recipe.ApiId, recipe.IdRecipeType } 
+                            into existingRecipes
+                            from recipe in existingRecipes.DefaultIfEmpty()
+                            where recipe == null
+                            select tastyRecipe).ToList();
+
+            var recipes = tastyRecipes.Select(r => r.Recipe);
 
             await _context.Recipes.AddRangeAsync(recipes);
             await _context.SaveChangesAsync();
 
-            var commitedRecipes = await _context.Recipes.ToListAsync();
+            commitedRecipes = await _context.Recipes.ToListAsync();
             var commitedRecipesWithTags = commitedRecipes.Join(tastyRecipes, 
                                                         recipe => new { recipe.ApiId, recipe.IdRecipeType }, 
                                                         tastyRecipe => new { tastyRecipe.Recipe.ApiId, tastyRecipe.Recipe.IdRecipeType }, 
