@@ -1,0 +1,18 @@
+﻿@inherits RecipeTagsBase
+@using WhereWeBoutToEatApp.Client.CustomControls;
+
+@if (RecipeTags != null && UserRecipeTags != null)
+{
+    <div class="col-12">
+        <div class="col-12 row">
+            <CheckedListBox Data="@RecipeTags" TextField="@((item) => item.DisplayName)" ValueField="@((item) => item.Id)" SelectedValues="@SelectedRecipeTagIds" />
+        </div>
+        <div class="col-12 row">  
+            <button class="form-control col-1 btn btn-primary" @onclick="SaveRecipeTagsAsync">Save</button>  
+        </div>  
+    </div>
+}
+else
+{
+    <div class="loading-bar"></div>
+}

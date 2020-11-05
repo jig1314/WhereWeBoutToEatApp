@@ -23,6 +23,8 @@ namespace WhereWeBoutToEatApp.Client
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
             builder.Services.AddHttpClient<IRecipeService, RecipeService>(client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+            builder.Services.AddHttpClient<IUserService, UserService>(client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("WhereWeBoutToEatApp.ServerAPI"));

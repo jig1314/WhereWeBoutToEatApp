@@ -1,0 +1,21 @@
+﻿@page "/preferences/"
+@inherits PreferencesBase
+@using WhereWeBoutToEatApp.Client.CustomControls
+
+<h3>Please select your preferences by category</h3>
+<hr />
+
+@if (RecipeTagTypes != null)
+{
+    <TabControl>
+        @foreach (var recipeTagType in RecipeTagTypes)
+        {
+            RenderFragment recipeTagPage = @<RecipeTags RecipeTagType="@recipeTagType"></RecipeTags>;
+            <TabPage ChildContent="recipeTagPage" Text="@recipeTagType.Type"></TabPage>
+        }
+    </TabControl>
+}
+else
+{
+    <div class="loading-bar"></div>
+}

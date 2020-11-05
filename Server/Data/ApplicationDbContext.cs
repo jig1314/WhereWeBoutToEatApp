@@ -37,6 +37,8 @@ namespace WhereWeBoutToEatApp.Server.Data
 
         public DbSet<Recipe_RecipeTag> Recipe_RecipeTags { get; set; }
 
+        public DbSet<AspNetUserRecipeTag> AspNetUserRecipeTag { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
