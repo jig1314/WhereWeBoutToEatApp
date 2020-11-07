@@ -11,6 +11,8 @@ namespace WhereWeBoutToEatApp.Server.Enums
         TastyApiHostName = 2,
         TastyApiHostValue = 3,
         TastyApiKeyName = 4,
-        TastyApiKeyValue = 5
+        TastyApiKeyValue = 5,
+        PersonalizerApiKey = 6,
+        PersonalizerServiceEndpoint = 7
     }
 }

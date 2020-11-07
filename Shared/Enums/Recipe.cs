@@ -10,5 +10,15 @@ namespace WhereWeBoutToEatApp.Shared.Enums
         {
             Tasty = 1
         }
+
+        public enum RecipeTagType
+        {
+            Cuisine = 1,
+            Dietary = 2,
+            Occasion = 3,
+            Meal = 4,
+            Seasonal = 5,
+            Holiday = 6
+        }
     }
 }

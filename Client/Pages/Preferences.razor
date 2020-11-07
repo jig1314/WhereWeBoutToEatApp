@@ -10,9 +10,9 @@
     <TabControl>
         @foreach (var recipeTagType in RecipeTagTypes)
         {
-            RenderFragment recipeTagPage = @<RecipeTags RecipeTagType="@recipeTagType"></RecipeTags>;
-            <TabPage ChildContent="recipeTagPage" Text="@recipeTagType.Type"></TabPage>
-        }
+            RenderFragment recipeTagPage =@<RecipeTags RecipeTagType="@recipeTagType"></RecipeTags>;
+<TabPage ChildContent="recipeTagPage" Text="@recipeTagType.Type"></TabPage>
+}
     </TabControl>
 }
 else

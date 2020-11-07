@@ -8,6 +8,8 @@ namespace WhereWeBoutToEatApp.Shared
     {
         public int Id { get; set; }
 
+        public int? EnumCode { get; set; }
+
         public string Type { get; set; }
 
     }

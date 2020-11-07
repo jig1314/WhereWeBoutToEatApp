@@ -1,0 +1,29 @@
+﻿@page "/recipeRecommendations/"
+@inherits RecipeRecommendationsBase
+
+<h3>Recipe Recommendations</h3>
+<hr />
+
+@if (Recipes != null)
+{
+    <div class="card-deck">
+        @foreach (var recipe in Recipes)
+        {
+            <div class="card" style="min-width: 18rem; max-width: 20%; margin-top: 15px; margin-bottom: 15px;">
+                <img class="card-img-top recipeThumbnail" src="@recipe.ThumbnailURL" />
+                <div class="card-body">
+                    <h5 class="card-title">@recipe.Name</h5>
+                    <button type="button" class="btn btn-primary" @onclick="@(async () => await OpenRecipeAsync(recipe.Id))">View</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+else if (Recipes == null && HasSearched)
+{
+    <p>Sorry, we can't recommend any recipes until you tell us what you like or view some recipes.</p>
+}
+else
+{
+    <div class="loading-bar"></div>
+}

@@ -10,5 +10,6 @@ namespace WhereWeBoutToEatApp.Server.Repositories
     public interface ITastyRecipeRepository
     {
         Task<List<TastyRecipe>> SearchRecipes(string name);
+        Task<List<TastyRecipe>> SearchRecipesByTag(string tag);
     }
 }
