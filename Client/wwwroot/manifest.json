@@ -1,6 +1,6 @@
 {
-  "name": "Where We Bout To Eat",
-  "short_name": "Where We Bout To Eat",
+  "name": "WhereWeBoutToEatApp",
+  "short_name": "WhereWeBoutToEatApp",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",

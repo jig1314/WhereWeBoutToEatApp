@@ -88,6 +88,3 @@ PublishScripts/
 *.pidb
 *.svclog
 *.scc
-/Server/Properties/serviceDependencies.wherewebouttoeat - Web Deploy.json
-/Server/Properties/ServiceDependencies/wherewebouttoeat - Web Deploy/profile.arm.json
-/Server/Properties/ServiceDependencies/wherewebouttoeat - Web Deploy/mssql1.arm.json
