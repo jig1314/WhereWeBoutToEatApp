@@ -32,6 +32,30 @@ namespace WhereWeBoutToEatApp.Server.Controllers
             this.tastyRecipeRepository = tastyRecipeRepository;
         }
 
+        [HttpGet("favorites")]
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetUserFavoriteRecipes()
+        {
+            try
+            {
+                if (!HttpContext.User.Identity.IsAuthenticated)
+                {
+                    throw new Exception();
+                }
+
+                var idUser = GetUserId();
+                var favoriteRecipes = await _context.AspNetUserRecipes.Where(userRecipe => userRecipe.IdUser == idUser && userRecipe.IsFavorite)
+                                                                        .Join(_context.Recipes,
+                                                                        userRecipe => userRecipe.IdRecipe,
+                                                                        recipe => recipe.Id,
+                                                                        (userRecipe, recipe) => recipe).ToListAsync();
+                return Ok(favoriteRecipes);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving recipes");
+            }
+        }
+
         [HttpGet("recommendations")]
         public async Task<ActionResult<RankedRecipes>> GetRecommendations()
         {

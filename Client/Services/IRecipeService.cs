@@ -14,5 +14,6 @@ namespace WhereWeBoutToEatApp.Client.Services
         Task UpdateUserRecipe(long id, AspNetUserRecipe newUserRecipe);
         Task<RankedRecipes> GetRecommendations();
         Task RecommendationSelected(string eventId);
+        Task<IEnumerable<Recipe>> GetUserFavorites();
     }
 }

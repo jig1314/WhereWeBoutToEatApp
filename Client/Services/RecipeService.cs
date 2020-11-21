@@ -44,6 +44,9 @@ namespace WhereWeBoutToEatApp.Client.Services
         public async Task<RankedRecipes> GetRecommendations() =>
             await httpClient.GetFromJsonAsync<RankedRecipes>($"recipes/recommendations");
 
+        public async Task<IEnumerable<Recipe>> GetUserFavorites() =>
+            await httpClient.GetFromJsonAsync<IEnumerable<Recipe>>($"recipes/favorites");
+
         public async Task RecommendationSelected(string eventId)
         {
             await httpClient.PutAsJsonAsync($"recipes/recommendationSelected", eventId);
