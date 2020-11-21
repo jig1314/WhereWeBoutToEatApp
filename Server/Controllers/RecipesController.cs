@@ -98,7 +98,7 @@ namespace WhereWeBoutToEatApp.Server.Controllers
                     new { Holiday = userRecipeTagDictionary.ContainsKey((int)Shared.Enums.Recipe.RecipeTagType.Holiday) ? string.Join(',', userRecipeTagDictionary[(int)Shared.Enums.Recipe.RecipeTagType.Holiday]) : string.Empty }
                 };
 
-                IEnumerable<Recipe> recipes = await GetUserRecipes();
+                (IEnumerable<Recipe> recipes, string selectedSearchCriteria) = await GetUserRecipes();
 
                 if (recipes != null)
                 {
@@ -142,7 +142,8 @@ namespace WhereWeBoutToEatApp.Server.Controllers
                     {
                         EventId = response.EventId,
                         RecommendedRecipeId = Convert.ToInt64(response.RewardActionId),
-                        Recipes = rankedRecipes
+                        Recipes = rankedRecipes,
+                        RecipeSearchCriteria = selectedSearchCriteria
                     };
                 }
 
@@ -154,36 +155,19 @@ namespace WhereWeBoutToEatApp.Server.Controllers
             }
         }
 
-        private async Task<IEnumerable<Recipe>> GetUserRecipes()
+        private async Task<(IEnumerable<Recipe>, string)> GetUserRecipes()
         {
-            var searchCriteria = await GetSearchCriteriaFromUserInformation();
-            if (string.IsNullOrWhiteSpace(searchCriteria))
-                return null;
+            var recipeTag = await GetSearchCriteriaFromUserInformation();
+            if (recipeTag == null)
+                return (null, null);
 
-            return await SearchForUserRecipesAsync(searchCriteria);
+            return (await SearchForUserRecipesAsync(recipeTag.Name), recipeTag.DisplayName);
         }
 
-        private async Task<string> GetSearchCriteriaFromUserInformation()
+        private async Task<RecipeTag> GetSearchCriteriaFromUserInformation()
         {
             var idUser = GetUserId();
             var userRecipeTags = new List<RecipeTag>();
-
-            var tagsFromViewedUserRecipes = await _context.AspNetUserRecipes.Where(userRecipe => userRecipe.IdUser == idUser)
-                                                                            .Join(
-                                                                            _context.Recipes,
-                                                                            userRecipe => userRecipe.IdRecipe,
-                                                                            recipe => recipe.Id,
-                                                                            (userRecipe, recipe) => recipe)
-                                                                            .Join(
-                                                                            _context.Recipe_RecipeTags,
-                                                                            recipe => recipe.Id,
-                                                                            recipeTagMapping => recipeTagMapping.IdRecipe,
-                                                                            (recipe, recipeTagMapping) => recipeTagMapping.IdRecipeTag)
-                                                                            .Join(
-                                                                            _context.RecipeTags,
-                                                                            idRecipeTag => idRecipeTag,
-                                                                            recipeTag => recipeTag.Id,
-                                                                            (idRecipeTag, recipeTag) => recipeTag).ToListAsync();
 
             var tagsFromUserPreferences = await _context.AspNetUserRecipeTag.Where(userRecipeTag => userRecipeTag.IdUser == idUser)
                                                                             .Join(
@@ -191,7 +175,6 @@ namespace WhereWeBoutToEatApp.Server.Controllers
                                                                             userRecipeTag => userRecipeTag.IdRecipeTag,
                                                                             recipeTag => recipeTag.Id,
                                                                             (userRecipeTag, recipeTag) => recipeTag).ToListAsync();
-            userRecipeTags.AddRange(tagsFromViewedUserRecipes);
             userRecipeTags.AddRange(tagsFromUserPreferences);
 
             if (userRecipeTags?.Count > 0)
@@ -199,7 +182,7 @@ namespace WhereWeBoutToEatApp.Server.Controllers
                 var random = new Random();
                 int randomIndex = random.Next(userRecipeTags.Count);
 
-                return userRecipeTags[randomIndex].Name;
+                return userRecipeTags[randomIndex];
             }
             else
             {

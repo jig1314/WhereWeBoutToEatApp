@@ -2,6 +2,10 @@
 @inherits RecipeRecommendationsBase
 
 <h3>Recipe Recommendations</h3>
+@if (RankedRecipes != null)
+{
+    <p>Because you like @RankedRecipes.RecipeSearchCriteria recipes</p>
+}
 <hr />
 
 @if (Recipes != null)
@@ -21,7 +25,7 @@
 }
 else if (Recipes == null && HasSearched)
 {
-    <p>Sorry, we can't recommend any recipes until you tell us what you like or view some recipes.</p>
+    <p>Sorry, we can't recommend any recipes until you tell us what you like.</p>
 }
 else
 {

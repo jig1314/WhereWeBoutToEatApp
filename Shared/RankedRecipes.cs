@@ -11,5 +11,7 @@ namespace WhereWeBoutToEatApp.Shared
         public long RecommendedRecipeId { get; set; }
 
         public List<Recipe> Recipes { get; set; }
+
+        public string RecipeSearchCriteria { get; set; }
     }
 }
