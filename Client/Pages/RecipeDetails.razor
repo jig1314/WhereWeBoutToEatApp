@@ -3,7 +3,7 @@
 
 @if (Recipe != null)
 {
-<div class="card border-light mb-3" style="width: 721px;">
+<div class="card border-light mb-3" style="min-width: 18rem; max-width: 25%;">
     <div class="card-body">
         <h5 style="font:bold" class="card-title">@Recipe.Name</h5>
     </div>
@@ -13,7 +13,7 @@
     }
     else
     {
-        <video width="720" height="480" controls>
+        <video style="height: 300px;" controls>
             <source src="@Recipe.VideoURL" type="video/mp4">
             Your browser does not support the video tag.
         </video>
